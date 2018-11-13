@@ -1,0 +1,44 @@
+- hosts: sites
+  user: ec2-user
+  tasks:
+    - name: Install essential packages to the EC2 Instance
+      yum:
+        name:
+          - httpd
+          - httpd-tools
+          - java
+          - php
+          - tomcat
+          - mariadb
+          - mariadb-server
+      become: yes
+    - name: removing httpd
+      yum:
+        name: httpd
+        state: absent
+      become: yes
+    - name: removing httpd-tools
+      yum:
+        name: httpd-tools
+        state: absent
+      become: yes
+    - name: removing java
+      yum:
+        name: java
+        state: absent
+      become: yes
+    - name: removing php
+      yum:
+        name: php
+        state: absent
+      become: yes
+    - name: removing mariadb
+      yum:
+        name: mariadb
+        state: absent
+      become: yes
+    - name: removing mariadb-server
+      yum:
+        name: mariadb-server
+        state: absent
+      become: yes
