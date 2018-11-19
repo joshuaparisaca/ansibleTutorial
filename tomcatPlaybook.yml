@@ -1,0 +1,38 @@
+# REMEMBER TO OPEN PORT 8080 0N YOUR EC2 INBOUND SECURITY RULES
+- hosts: sites
+  user: ec2-user
+  become: yes
+  tasks:
+    - name: Installing Java 1.8*
+      yum:
+        name:
+          - java-1.8*
+
+    - name: Unarchive a file a downloaded Tomcat folder
+      unarchive:
+        src: http://www.trieuvan.com/apache/tomcat/tomcat-8/v8.5.35/bin/apache-tomcat-8.5.35.tar.gz
+        dest: /opt/
+        remote_src: yes
+
+    - name: Copying sample.war file to Tomcat's webapp folder
+      copy:
+        src: Tomcat_files/sample.war
+        dest: /opt/apache-tomcat-8.5.35/webapps/
+
+    - name: Deleting tomcat-user.xml file
+      shell: rm tomcat-users.xml
+      args: 
+        chdir: /opt/apache-tomcat-8.5.35/conf/
+
+    - name: Copying updated tomcat-user.xml file to Tomcat's conf directory
+      copy:
+        src: Tomcat_files/tomcat-users.xml
+        dest: /opt/apache-tomcat-8.5.35/conf/
+
+    - name: Changing permission of all bin's .sh files and starting up Tomcat 
+      shell: "{{ item }}"
+      with_items: 
+        - chmod +x *.sh
+        - ./startup.sh
+      args: 
+        chdir: /opt/apache-tomcat-8.5.35/bin/
